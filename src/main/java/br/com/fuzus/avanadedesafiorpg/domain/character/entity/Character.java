@@ -1,11 +1,16 @@
 package br.com.fuzus.avanadedesafiorpg.domain.character.entity;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Character {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
     private Integer lifePoints;
@@ -13,5 +18,7 @@ public abstract class Character {
     private Integer defence;
     private Integer agility;
     private Integer diceNumber;
-    private Dice diceFaces;
+
+    @Enumerated(EnumType.STRING)
+    private Dice diceType;
 }
