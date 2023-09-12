@@ -18,7 +18,7 @@ public record ResponseCharacterDto(
 
     public ResponseCharacterDto(Character character) {
         this(
-                character.getId(),
+                character.getId().toString(),
                 character.getName(),
                 character.getLifePoints(),
                 character.getStrength(),

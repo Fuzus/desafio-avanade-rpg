@@ -13,6 +13,8 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class CharacterServiceImp  implements CharacterService {
 
@@ -54,7 +56,8 @@ public class CharacterServiceImp  implements CharacterService {
 
     @Override
     public Character getById(String id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Personagem não encontrado"));
+        var uuid = UUID.fromString(id);
+        return repository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Personagem não encontrado"));
     }
 
     @Override
@@ -66,7 +69,8 @@ public class CharacterServiceImp  implements CharacterService {
 
     @Override
     public void delete(String id) {
-        repository.deleteById(id);
+        var uuid = UUID.fromString(id);
+        repository.deleteById(uuid);
     }
 
     private Character saveInDatabase(Character character){

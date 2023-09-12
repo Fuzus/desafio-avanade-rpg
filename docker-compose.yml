@@ -7,6 +7,6 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: avanade-rpg
+      POSTGRES_DB: avanade_rpg
     ports:
       - 5432:5432

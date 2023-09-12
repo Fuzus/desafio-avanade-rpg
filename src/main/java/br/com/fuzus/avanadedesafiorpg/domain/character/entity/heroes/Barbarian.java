@@ -2,7 +2,12 @@ package br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
+import jakarta.persistence.Entity;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Entity
+@NoArgsConstructor
 public class Barbarian extends Character {
 
     public Barbarian(String name) {

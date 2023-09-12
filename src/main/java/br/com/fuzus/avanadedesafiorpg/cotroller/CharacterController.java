@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("personagem")
+@RequestMapping("personagens")
 @RequiredArgsConstructor
 public class CharacterController {
 
