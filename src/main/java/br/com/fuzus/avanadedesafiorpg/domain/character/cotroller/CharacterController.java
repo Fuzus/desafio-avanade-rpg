@@ -1,4 +1,4 @@
-package br.com.fuzus.avanadedesafiorpg.cotroller;
+package br.com.fuzus.avanadedesafiorpg.domain.character.cotroller;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.dto.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.dto.ResponseCharacterDto;
