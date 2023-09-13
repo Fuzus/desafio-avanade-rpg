@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "character_class", discriminatorType = DiscriminatorType.STRING)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +26,6 @@ public abstract class Character {
 
     @Enumerated(EnumType.STRING)
     private Dice diceType;
+    @Column(name = "character_class",insertable = false, updatable = false)
+    private String characterClass;
 }

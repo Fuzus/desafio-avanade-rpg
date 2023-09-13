@@ -13,7 +13,8 @@ public record ResponseCharacterDto(
         Integer defence,
         Integer agility,
         Integer diceNumber,
-        Dice diceType
+        Dice diceType,
+        String characterClass
 ) {
 
     public ResponseCharacterDto(Character character) {
@@ -25,7 +26,8 @@ public record ResponseCharacterDto(
                 character.getDefence(),
                 character.getAgility(),
                 character.getDiceNumber(),
-                character.getDiceType()
+                character.getDiceType(),
+                character.getCharacterClass()
         );
     }
 

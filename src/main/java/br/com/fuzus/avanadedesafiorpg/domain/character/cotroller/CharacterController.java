@@ -25,7 +25,7 @@ public class CharacterController {
     @PostMapping("/guerreiro")
     public ResponseEntity<ResponseCharacterDto> createWarrior(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var warrior = this.service.createWarrior(dto);
-        return this.createCharacterResponse(warrior, uriBuilder);
+        return this.createCharacterResponse(warrior,  uriBuilder);
     }
 
     @PostMapping("/barbaro")
