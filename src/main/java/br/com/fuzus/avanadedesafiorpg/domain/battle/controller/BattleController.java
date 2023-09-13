@@ -43,4 +43,11 @@ public class BattleController {
         return ResponseEntity.ok(battleStatus);
     }
 
+    @PostMapping("/defender")
+    @Transactional
+    public ResponseEntity<BattleStatusResponse> rowDefence(@Valid @RequestBody InteractInBattleDto dto){
+        var battleStatus = this.service.defend(dto);
+        return ResponseEntity.ok(battleStatus);
+    }
+
 }
