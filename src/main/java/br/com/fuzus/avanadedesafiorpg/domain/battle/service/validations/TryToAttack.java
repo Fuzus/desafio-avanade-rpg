@@ -1,6 +1,6 @@
 package br.com.fuzus.avanadedesafiorpg.domain.battle.service.validations;
 
-import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRow;
+import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRoll;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +17,10 @@ public class TryToAttack implements AttackValidations {
     }
 
     private int getValueAttacker(){
-        return DiceRow.diceRow(Dice.D12) + attacker.getStrength() + attacker.getAgility();
+        return DiceRoll.diceRoll(Dice.D12) + attacker.getStrength() + attacker.getAgility();
     }
 
     private int getValueTarget() {
-        return DiceRow.diceRow(Dice.D12) + target.getDefence() + target.getAgility();
+        return DiceRoll.diceRoll(Dice.D12) + target.getDefence() + target.getAgility();
     }
 }

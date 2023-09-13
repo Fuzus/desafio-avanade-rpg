@@ -12,7 +12,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStatu
 import br.com.fuzus.avanadedesafiorpg.domain.battle.repository.BattleRepository;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.CalculateDamage;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.DamageActions;
-import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRow;
+import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRoll;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.validations.*;
 import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
@@ -42,7 +42,7 @@ public class BattleServiceImp implements BattleService {
         }
         var battle = new Battle(hero, monster);
         battle = this.battleRepository.save(battle);
-        return new BattleStartedResponse(battle, "Batalha iniciada");
+        return new BattleStartedResponse(battle, "Batalha iniciada, role iniciativa");
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BattleServiceImp implements BattleService {
         this.doTurnValidations(new ValidateInitiativeRolled(battle));
         String nextAttacker;
         do {
-            var playerInitiative = DiceRow.diceRow(Dice.D20);
-            var monsterInitiative = DiceRow.diceRow(Dice.D20);
+            var playerInitiative = DiceRoll.diceRoll(Dice.D20);
+            var monsterInitiative = DiceRoll.diceRoll(Dice.D20);
 
             battle.setPlayerInitiative(playerInitiative);
             battle.setMonsterInitiative(monsterInitiative);
@@ -71,30 +71,40 @@ public class BattleServiceImp implements BattleService {
     public BattleStatusResponse attack(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
+
         this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanAttack(actualTurn));
+
         var damageDealt = this.attack(battle.getHero(), battle.getMonster());
         actualTurn.setDamageDealt(damageDealt);
+
         if (battle.getMonster().getLifePoints() <= 0) {
             battle.setStatus(BattleStatus.VICTORY);
         }
+
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Defenda-se");
+
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Rapido, defenda-se!");
     }
 
     @Override
     public BattleStatusResponse defend(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
+
         this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanDefend(actualTurn));
+
         var damageReceived = this.attack(battle.getMonster(), battle.getHero());
         actualTurn.setDamageReceived(damageReceived);
+
         if (battle.getHero().getLifePoints() <= 0){
             battle.setStatus(BattleStatus.DEFEATED);
         }
+
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Ataque");
+
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Sua vez de atacar");
     }
 
     private Battle getBattleById(Long id) {

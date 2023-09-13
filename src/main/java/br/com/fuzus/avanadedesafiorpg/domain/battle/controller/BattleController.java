@@ -31,21 +31,21 @@ public class BattleController {
 
     @PostMapping("/iniciativa")
     @Transactional
-    public ResponseEntity<BattleInitiativeResultResponse> rowInitiative(@Valid @RequestBody InteractInBattleDto dto){
+    public ResponseEntity<BattleInitiativeResultResponse> rollInitiative(@Valid @RequestBody InteractInBattleDto dto){
         var battleStatus = this.service.diceInitiative(dto);
         return ResponseEntity.ok(battleStatus);
     }
 
     @PostMapping("/atacar")
     @Transactional
-    public ResponseEntity<BattleStatusResponse> rowAttack(@Valid @RequestBody InteractInBattleDto dto){
+    public ResponseEntity<BattleStatusResponse> rollAttack(@Valid @RequestBody InteractInBattleDto dto){
         var battleStatus = this.service.attack(dto);
         return ResponseEntity.ok(battleStatus);
     }
 
     @PostMapping("/defender")
     @Transactional
-    public ResponseEntity<BattleStatusResponse> rowDefence(@Valid @RequestBody InteractInBattleDto dto){
+    public ResponseEntity<BattleStatusResponse> rollDefence(@Valid @RequestBody InteractInBattleDto dto){
         var battleStatus = this.service.defend(dto);
         return ResponseEntity.ok(battleStatus);
     }
