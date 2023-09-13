@@ -68,12 +68,7 @@ public class BattleServiceImp implements BattleService {
     public BattleStatusResponse attack(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
-        if (actualTurn.getDamageDealt() != null && actualTurn.getDamageReceived() != null){
-            var turn = new Turn(null, actualTurn.getTurnNumber() + 1, null, null, battle, actualTurn.getInitiativeWinner());
-            battle.getTurns().add(turn);
-            actualTurn = this.turnService.createTurn(turn, battle);
-        }
-        this.doTurnValidations(battle, actualTurn, new ValidatePlayerCanAttack());
+        this.doTurnValidations(battle, actualTurn, new ValidatePlayerCanAttack(actualTurn));
         var damageDealt = this.attack(battle.getHero(), battle.getMonster());
         actualTurn.setDamageDealt(damageDealt);
         actualTurn = this.turnService.updateTurn(actualTurn);
@@ -85,12 +80,7 @@ public class BattleServiceImp implements BattleService {
     public BattleStatusResponse defend(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
-        if (actualTurn.getDamageDealt() != null && actualTurn.getDamageReceived() != null){
-            var turn = new Turn(null, actualTurn.getTurnNumber() + 1, null, null, battle, actualTurn.getInitiativeWinner());
-            battle.getTurns().add(turn);
-            actualTurn = this.turnService.createTurn(turn, battle);
-        }
-        this.doTurnValidations(battle, actualTurn, new ValidatePlayerTurnDefence());
+        this.doTurnValidations(battle, actualTurn, new ValidatePlayerTurnDefence(actualTurn));
         var damageReceived = this.attack(battle.getMonster(), battle.getHero());
         actualTurn.setDamageReceived(damageReceived);
         actualTurn = this.turnService.updateTurn(actualTurn);
@@ -104,7 +94,7 @@ public class BattleServiceImp implements BattleService {
 
     private void doTurnValidations(Battle battle, Turn turn, ValidationTurn... validation) {
         for (ValidationTurn validationTurn : validation) {
-            validationTurn.validate(battle, turn);
+            validationTurn.validate();
         }
     }
 

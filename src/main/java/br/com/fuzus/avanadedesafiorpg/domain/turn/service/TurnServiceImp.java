@@ -3,6 +3,8 @@ package br.com.fuzus.avanadedesafiorpg.domain.turn.service;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.repository.TurnRepository;
+import br.com.fuzus.avanadedesafiorpg.domain.turn.service.validators.ActionsAvaliableInTurn;
+import br.com.fuzus.avanadedesafiorpg.domain.turn.service.validators.Validator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,14 @@ public class TurnServiceImp implements TurnService{
 
 
     @Override
+    @Transactional
     public Turn getActualTurn(Battle battle) {
-        return this.repository.findTopByBattleOrderByIdDesc(battle);
+        var turn = this.repository.findTopByBattleOrderByIdDesc(battle);
+        Validator validator = new ActionsAvaliableInTurn(turn);
+        if (validator.validate())
+            return turn;
+        var newTurn = new Turn(null, turn.getTurnNumber() + 1, null, null, battle, turn.getInitiativeWinner());
+        return this.createTurn(newTurn, battle);
     }
 
     @Override
