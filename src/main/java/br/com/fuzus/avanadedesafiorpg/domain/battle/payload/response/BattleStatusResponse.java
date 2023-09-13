@@ -4,14 +4,14 @@ import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
 import br.com.fuzus.avanadedesafiorpg.domain.character.payload.response.CharacterDtoResponse;
 
 public record BattleStatusResponse(
-        Integer turnNumber,
+        Long turnNumber,
         Integer damageDealt,
         Integer damageReceived,
         CharacterDtoResponse heroStatus,
         CharacterDtoResponse monsterStatus,
         String message
 ) {
-    public BattleStatusResponse(Integer turnNumber, Battle battle, String message) {
+    public BattleStatusResponse(Long turnNumber, Battle battle, String message) {
         this(turnNumber,
                 null,
                 null,

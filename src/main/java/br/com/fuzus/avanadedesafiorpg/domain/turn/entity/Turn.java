@@ -1,5 +1,6 @@
-package br.com.fuzus.avanadedesafiorpg.domain.battle.entity;
+package br.com.fuzus.avanadedesafiorpg.domain.turn.entity;
 
+import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,11 @@ public class Turn {
 
     private Integer damageReceived;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "battle_id")
     private Battle battle;
+
+    public Turn(Long turnNumber) {
+        this.turnNumber = turnNumber;
+    }
 }

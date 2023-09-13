@@ -4,6 +4,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.InteractInBa
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.StartBattleDto;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleInitiativeResultResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStartedResponse;
+import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStatusResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.BattleService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -31,7 +32,14 @@ public class BattleController {
     @PostMapping("/iniciativa")
     @Transactional
     public ResponseEntity<BattleInitiativeResultResponse> rowInitiative(@Valid @RequestBody InteractInBattleDto dto){
-        var battleStatus = this.service.diceInitiative(dto.id());
+        var battleStatus = this.service.diceInitiative(dto);
+        return ResponseEntity.ok(battleStatus);
+    }
+
+    @PostMapping("/atacar")
+    @Transactional
+    public ResponseEntity<BattleStatusResponse> rowAttack(@Valid @RequestBody InteractInBattleDto dto){
+        var battleStatus = this.service.attack(dto);
         return ResponseEntity.ok(battleStatus);
     }
 

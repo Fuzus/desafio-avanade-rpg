@@ -1,6 +1,7 @@
 package br.com.fuzus.avanadedesafiorpg.domain.battle.entity;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
+import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class Battle {
     private Character monster;
     private Integer playerInitiative;
     private Integer monsterInitiative;
-    @OneToMany(mappedBy = "battle")
+    @OneToMany(mappedBy = "battle", fetch = FetchType.LAZY)
     List<Turn> turns;
 
     public Battle(Character hero, Character monster) {

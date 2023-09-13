@@ -1,4 +1,4 @@
-package br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions;
+package br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
 
