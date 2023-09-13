@@ -48,6 +48,7 @@ public class BattleServiceImp implements BattleService {
     @Override
     public BattleInitiativeResultResponse diceInitiative(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
+        this.doTurnValidations(new ValidateInitiativeRolled(battle));
         String nextAttacker;
         do {
             var playerInitiative = DiceRow.diceRow(Dice.D20);
