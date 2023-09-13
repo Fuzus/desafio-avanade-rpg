@@ -27,10 +27,13 @@ public class Battle {
     private Integer playerInitiative;
     private Integer monsterInitiative;
     @OneToMany(mappedBy = "battle", fetch = FetchType.LAZY)
-    List<Turn> turns;
+    private List<Turn> turns;
+    @Enumerated(EnumType.STRING)
+    private BattleStatus status;
 
     public Battle(Character hero, Character monster) {
         this.hero = hero;
         this.monster = monster;
+        this.status = BattleStatus.STARTED;
     }
 }

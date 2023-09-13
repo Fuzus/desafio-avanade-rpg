@@ -1,5 +1,6 @@
 package br.com.fuzus.avanadedesafiorpg.domain.battle.service;
 
+import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.BattleStatus;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.InteractInBattleDto;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleInitiativeResultResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStartedResponse;
@@ -59,6 +60,7 @@ public class BattleServiceImp implements BattleService {
         } while (battle.getPlayerInitiative().equals(battle.getMonsterInitiative()));
         var turn = new Turn(null, 1L, null, null, battle, Subject.valueOf(nextAttacker));
         battle.getTurns().add(turn);
+        battle.setStatus(BattleStatus.ON_GOING);
         this.turnService.createTurn(turn, battle);
         battle = this.battleRepository.save(battle);
         return new BattleInitiativeResultResponse(battle, String.format("%s inicia atacando", nextAttacker));
@@ -68,9 +70,12 @@ public class BattleServiceImp implements BattleService {
     public BattleStatusResponse attack(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
-        this.doTurnValidations(battle, actualTurn, new ValidatePlayerCanAttack(actualTurn));
+        this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanAttack(actualTurn));
         var damageDealt = this.attack(battle.getHero(), battle.getMonster());
         actualTurn.setDamageDealt(damageDealt);
+        if (battle.getMonster().getLifePoints() <= 0) {
+            battle.setStatus(BattleStatus.VICTORY);
+        }
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
         return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Defenda-se");
@@ -80,19 +85,22 @@ public class BattleServiceImp implements BattleService {
     public BattleStatusResponse defend(InteractInBattleDto dto) {
         var battle = this.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
-        this.doTurnValidations(battle, actualTurn, new ValidatePlayerTurnDefence(actualTurn));
+        this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanDefend(actualTurn));
         var damageReceived = this.attack(battle.getMonster(), battle.getHero());
         actualTurn.setDamageReceived(damageReceived);
+        if (battle.getHero().getLifePoints() <= 0){
+            battle.setStatus(BattleStatus.DEFEATED);
+        }
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Defenda-se");
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Ataque");
     }
 
     private Battle getBattleById(Long id) {
         return this.battleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Batalha não encontrada"));
     }
 
-    private void doTurnValidations(Battle battle, Turn turn, ValidationTurn... validation) {
+    private void doTurnValidations(ValidationTurn... validation) {
         for (ValidationTurn validationTurn : validation) {
             validationTurn.validate();
         }

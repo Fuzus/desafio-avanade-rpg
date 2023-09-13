@@ -6,7 +6,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ValidatePlayerTurnDefence implements ValidationTurn {
+public class ValidatePlayerCanDefend implements ValidationTurn {
 
     private final Turn turn;
 

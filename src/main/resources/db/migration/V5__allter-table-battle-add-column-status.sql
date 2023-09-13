@@ -1,0 +1,1 @@
+ALTER TABLE battle ADD COLUMN status VARCHAR(10);
