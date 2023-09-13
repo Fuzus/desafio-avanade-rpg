@@ -1,11 +1,9 @@
-package br.com.fuzus.avanadedesafiorpg.domain.character.dto;
+package br.com.fuzus.avanadedesafiorpg.domain.character.payload.response;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
-public record ResponseCharacterDto(
+public record CharacterDtoResponse(
         String id,
         String name,
         Integer lifePoints,
@@ -17,7 +15,7 @@ public record ResponseCharacterDto(
         String characterClass
 ) {
 
-    public ResponseCharacterDto(Character character) {
+    public CharacterDtoResponse(Character character) {
         this(
                 character.getId().toString(),
                 character.getName(),

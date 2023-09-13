@@ -1,6 +1,8 @@
 package br.com.fuzus.avanadedesafiorpg.domain.character.entity;
 
 public enum Dice {
+
+    D20(20),
     D12(12),
     D8(8),
     D6(6),

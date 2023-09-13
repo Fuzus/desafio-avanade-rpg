@@ -1,6 +1,6 @@
 package br.com.fuzus.avanadedesafiorpg.domain.character.service.imp;
 
-import br.com.fuzus.avanadedesafiorpg.domain.character.dto.CreateCharacterDto;
+import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes.Barbarian;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes.Knight;
