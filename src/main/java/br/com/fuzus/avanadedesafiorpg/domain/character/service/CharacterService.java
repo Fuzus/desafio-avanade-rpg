@@ -3,6 +3,8 @@ package br.com.fuzus.avanadedesafiorpg.domain.character.service;
 import br.com.fuzus.avanadedesafiorpg.domain.character.dto.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 
+import java.util.List;
+
 public interface CharacterService {
 
     Character createWarrior(CreateCharacterDto dto);
@@ -14,4 +16,5 @@ public interface CharacterService {
     Character getById(String id);
     Character update(String id, CreateCharacterDto dto);
     void delete(String id);
+    List<Character> getAll();
 }

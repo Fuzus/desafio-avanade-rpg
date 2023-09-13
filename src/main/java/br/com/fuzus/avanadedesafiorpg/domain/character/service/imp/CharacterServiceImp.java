@@ -13,6 +13,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -71,6 +72,11 @@ public class CharacterServiceImp  implements CharacterService {
     public void delete(String id) {
         var uuid = UUID.fromString(id);
         repository.deleteById(uuid);
+    }
+
+    @Override
+    public List<Character> getAll() {
+        return this.repository.findAll();
     }
 
     private Character saveInDatabase(Character character){
