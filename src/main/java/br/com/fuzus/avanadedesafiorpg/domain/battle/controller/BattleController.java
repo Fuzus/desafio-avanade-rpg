@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("battle")
+@RequestMapping("batalhar")
 @RequiredArgsConstructor
 public class BattleController {
 
@@ -28,7 +28,7 @@ public class BattleController {
         return ResponseEntity.ok(startedBattle);
     }
 
-    @PostMapping("/initiative")
+    @PostMapping("/iniciativa")
     @Transactional
     public ResponseEntity<BattleInitiativeResultResponse> rowInitiative(@Valid @RequestBody InteractInBattleDto dto){
         var battleStatus = this.service.diceInitiative(dto.id());
