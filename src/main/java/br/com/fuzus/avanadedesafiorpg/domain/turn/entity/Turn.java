@@ -30,6 +30,7 @@ public class Turn {
     private Battle battle;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private Subject initiativeWinner;
 
     public Turn(Long turnNumber) {

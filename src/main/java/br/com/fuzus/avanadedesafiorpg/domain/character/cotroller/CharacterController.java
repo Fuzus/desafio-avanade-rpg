@@ -5,6 +5,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.payload.response.Characte
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,49 +34,49 @@ public class CharacterController {
 
     @PostMapping("/guerreiro")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createWarrior(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createWarrior(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var warrior = this.service.createWarrior(dto);
         return this.createCharacterResponse(warrior,  uriBuilder);
     }
 
     @PostMapping("/barbaro")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createBarbarian(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createBarbarian(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var barbarian = this.service.createBarbarian(dto);
         return this.createCharacterResponse(barbarian, uriBuilder);
     }
 
     @PostMapping("/cavaleiro")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createKnight(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createKnight(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var knight = this.service.createKnight(dto);
         return this.createCharacterResponse(knight, uriBuilder);
     }
 
     @PostMapping("/orc")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createOrc(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createOrc(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var orc = this.service.createOrc(dto);
         return this.createCharacterResponse(orc, uriBuilder);
     }
 
     @PostMapping("/gigante")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createGiant(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createGiant(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var giant = this.service.createGiant(dto);
         return this.createCharacterResponse(giant, uriBuilder);
     }
 
     @PostMapping("/lobisomem")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> createWereWolf(@RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CharacterDtoResponse> createWereWolf(@Valid @RequestBody CreateCharacterDto dto, UriComponentsBuilder uriBuilder) {
         var werewolf = this.service.createWerewolf(dto);
         return this.createCharacterResponse(werewolf, uriBuilder);
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<CharacterDtoResponse> updateCharacter(@PathVariable String id, @RequestBody CreateCharacterDto dto){
+    public ResponseEntity<CharacterDtoResponse> updateCharacter(@PathVariable String id, @Valid @RequestBody CreateCharacterDto dto){
         var character = this.service.update(id, dto);
         return ResponseEntity.ok(new CharacterDtoResponse(character));
     }

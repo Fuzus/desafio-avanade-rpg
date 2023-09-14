@@ -10,6 +10,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStatu
 import br.com.fuzus.avanadedesafiorpg.domain.battle.repository.BattleRepository;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.CalculateDamage;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.DamageActions;
+import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.PlayerActions;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRoll;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.validations.*;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
@@ -51,7 +52,7 @@ public class BattleServiceImp implements BattleService {
     @Override
     public BattleInitiativeResultResponse diceInitiative(InteractInBattleDto dto) {
         var battle = this.battleHistoryService.getBattleById(dto.id());
-        this.doTurnValidations(new ValidateInitiativeRolled(battle, environment.getProperty("battle.initiative.error")));
+        this.doTurnValidations(new ValidateInitiativeRolled(battle, environment.getProperty("battle.initiative.error.AlreadyRolled")));
         Subject nextAttacker;
         do {
             var playerInitiative = DiceRoll.diceRoll(Dice.D20);
@@ -72,47 +73,53 @@ public class BattleServiceImp implements BattleService {
 
     @Override
     public BattleStatusResponse attack(InteractInBattleDto dto) {
-        var battle = this.battleHistoryService.getBattleById(dto.id());
-        var actualTurn = this.turnService.getActualTurn(battle);
-
-        this.doTurnValidations(new ValidateEndGame(battle, environment.getProperty("battle.ended")), new ValidatePlayerCanAttack(actualTurn, environment.getProperty("battle.turn.attack.error")));
-
-        var damageDealt = this.attack(battle.getHero(), battle.getMonster());
-        actualTurn.setDamageDealt(damageDealt);
-
-        if (battle.getMonster().getLifePoints() <= 0) {
-            battle.setStatus(BattleStatus.VICTORY);
-        }
-
-        actualTurn = this.turnService.updateTurn(actualTurn);
-        battle = this.battleRepository.save(battle);
-
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), environment.getProperty("battle.turn.defend"));
+        return this.act(dto, PlayerActions.ATTACK);
     }
 
     @Override
     public BattleStatusResponse defend(InteractInBattleDto dto) {
+        return this.act(dto, PlayerActions.DEFEND);
+    }
+
+    private BattleStatusResponse act(InteractInBattleDto dto, PlayerActions playerAction) {
         var battle = this.battleHistoryService.getBattleById(dto.id());
+
+        this.doTurnValidations(new ValidateEndGame(battle, environment.getProperty("battle.ended")),
+                new ValidateInitiativeNotRolled(battle, environment.getProperty("battle.initiative.error.notRolledYet")));
+
         var actualTurn = this.turnService.getActualTurn(battle);
+        String nextTurnAction = playerAction == PlayerActions.DEFEND ?
+                environment.getProperty("battle.turn.attack") : environment.getProperty("battle.turn.defend");
 
-        this.doTurnValidations(new ValidateEndGame(battle, environment.getProperty("battle.ended")), new ValidatePlayerCanDefend(actualTurn, environment.getProperty("battle.turn.defend.error")));
+        if (playerAction == PlayerActions.ATTACK) {
+            this.doTurnValidations(new ValidatePlayerCanAttack(actualTurn, environment.getProperty("battle.turn.attack.error")));
+            var damageDealt = this.attack(battle.getHero(), battle.getMonster());
+            actualTurn.setDamageDealt(damageDealt);
 
-        var damageReceived = this.attack(battle.getMonster(), battle.getHero());
-        actualTurn.setDamageReceived(damageReceived);
+            if (battle.getMonster().getLifePoints() <= 0) {
+                battle.setStatus(BattleStatus.VICTORY);
+                nextTurnAction = environment.getProperty("battle.ended.victory");
+            }
+        } else {
+            this.doTurnValidations(new ValidatePlayerCanDefend(actualTurn, environment.getProperty("battle.turn.defend.error")));
+            var damageReceived = this.attack(battle.getMonster(), battle.getHero());
+            actualTurn.setDamageReceived(damageReceived);
 
-        if (battle.getHero().getLifePoints() <= 0) {
-            battle.setStatus(BattleStatus.DEFEATED);
+            if (battle.getHero().getLifePoints() <= 0) {
+                battle.setStatus(BattleStatus.DEFEATED);
+                nextTurnAction = environment.getProperty("battle.ended.defeated");
+            }
         }
 
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
 
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), environment.getProperty("battle.turn.attack"));
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), nextTurnAction);
     }
 
-    private void doTurnValidations(ValidationTurn... validation) {
-        for (ValidationTurn validationTurn : validation) {
-            validationTurn.validate();
+    private void doTurnValidations(ValidationTurn... validations) {
+        for (ValidationTurn validation : validations) {
+            validation.validate();
         }
     }
 
