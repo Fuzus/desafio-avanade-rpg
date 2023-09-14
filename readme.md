@@ -36,7 +36,7 @@ Junte-se a batalha épica estilo Advanced Dungeons & Dragons (AD&D)!
      - O resultado da iniciativa definirá quem terá prioridade de ataque em cada turno
  - Após a iniciativa finalmente está na hora de atacar/defender
    - Para isso realize uma requisição **PATCH /ataque** ou **PATCH /defesa** passando no body o número do id da batalha
-     - Tenha em mente que um turno possui duas partes, ataque e defesa definido pela iniciativa
+     - Tenha em mente que um turno possui duas partes, ataque e defesa e a prioridade foi definida definido pela iniciativa
 - Quando valor de PV do heroi ou do monstro chegar a 0 a batalha termina
 - É possivel buscar o histórico das batalhas 
   - Realizando a requisição **GET /historico** recebera de forma paginada o historico de todas as batalhas que foram realizadas

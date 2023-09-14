@@ -98,6 +98,7 @@ public class BattleServiceImp implements BattleService {
 
             if (battle.getMonster().getLifePoints() <= 0) {
                 battle.setStatus(BattleStatus.VICTORY);
+                battle.getMonster().setLifePoints(0);
                 nextTurnAction = environment.getProperty("battle.ended.victory");
             }
         } else {
@@ -107,6 +108,7 @@ public class BattleServiceImp implements BattleService {
 
             if (battle.getHero().getLifePoints() <= 0) {
                 battle.setStatus(BattleStatus.DEFEATED);
+                battle.getHero().setLifePoints(0);
                 nextTurnAction = environment.getProperty("battle.ended.defeated");
             }
         }
