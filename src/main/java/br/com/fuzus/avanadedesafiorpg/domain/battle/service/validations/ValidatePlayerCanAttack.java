@@ -9,13 +9,14 @@ import lombok.RequiredArgsConstructor;
 public class ValidatePlayerCanAttack implements ValidationTurn {
 
     private final Turn turn;
+    private final String errorMessage;
 
     @Override
     public void validate() {
         boolean canAttack = (turn.getInitiativeWinner() == Subject.HERO && turn.getDamageDealt() == null)
                                     || turn.getDamageReceived() != null;
         if (!canAttack) {
-            throw new UnableToMoveException("Personagem não deve atacar neste turno");
+            throw new UnableToMoveException(errorMessage);
         }
     }
 }

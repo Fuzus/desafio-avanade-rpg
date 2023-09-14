@@ -14,13 +14,15 @@ import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRol
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.validations.*;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
-import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Subject;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.service.TurnService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class BattleServiceImp implements BattleService {
     private final BattleHistoryService battleHistoryService;
     private final CharacterService characterService;
     private final TurnService turnService;
+    private final Environment environment;
 
     @Override
     public BattleStartedResponse startBattle(StartBattleDto dto) {
@@ -42,13 +45,13 @@ public class BattleServiceImp implements BattleService {
         }
         var battle = new Battle(hero, monster);
         battle = this.battleRepository.save(battle);
-        return new BattleStartedResponse(battle, "Batalha iniciada, role iniciativa");
+        return new BattleStartedResponse(battle, environment.getProperty("battle.started"));
     }
 
     @Override
     public BattleInitiativeResultResponse diceInitiative(InteractInBattleDto dto) {
         var battle = this.battleHistoryService.getBattleById(dto.id());
-        this.doTurnValidations(new ValidateInitiativeRolled(battle));
+        this.doTurnValidations(new ValidateInitiativeRolled(battle, environment.getProperty("battle.initiative.error")));
         String nextAttacker;
         do {
             var playerInitiative = DiceRoll.diceRoll(Dice.D20);
@@ -64,7 +67,7 @@ public class BattleServiceImp implements BattleService {
         battle.setStatus(BattleStatus.ON_GOING);
         this.turnService.createTurn(turn, battle);
         battle = this.battleRepository.save(battle);
-        return new BattleInitiativeResultResponse(battle, String.format("%s inicia atacando", nextAttacker));
+        return new BattleInitiativeResultResponse(battle, String.format(Objects.requireNonNull(environment.getProperty("battle.initiative")), nextAttacker));
     }
 
     @Override
@@ -72,7 +75,7 @@ public class BattleServiceImp implements BattleService {
         var battle = this.battleHistoryService.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
 
-        this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanAttack(actualTurn));
+        this.doTurnValidations(new ValidateEndGame(battle, environment.getProperty("battle.ended")), new ValidatePlayerCanAttack(actualTurn, environment.getProperty("battle.turn.attack.error")));
 
         var damageDealt = this.attack(battle.getHero(), battle.getMonster());
         actualTurn.setDamageDealt(damageDealt);
@@ -84,7 +87,7 @@ public class BattleServiceImp implements BattleService {
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
 
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Rapido, defenda-se!");
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), environment.getProperty("battle.turn.defend"));
     }
 
     @Override
@@ -92,7 +95,7 @@ public class BattleServiceImp implements BattleService {
         var battle = this.battleHistoryService.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
 
-        this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanDefend(actualTurn));
+        this.doTurnValidations(new ValidateEndGame(battle, environment.getProperty("battle.ended")), new ValidatePlayerCanDefend(actualTurn, environment.getProperty("battle.turn.defend.error")));
 
         var damageReceived = this.attack(battle.getMonster(), battle.getHero());
         actualTurn.setDamageReceived(damageReceived);
@@ -104,7 +107,7 @@ public class BattleServiceImp implements BattleService {
         actualTurn = this.turnService.updateTurn(actualTurn);
         battle = this.battleRepository.save(battle);
 
-        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Sua vez de atacar");
+        return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), environment.getProperty("battle.turn.attack"));
     }
 
     private void doTurnValidations(ValidationTurn... validation) {

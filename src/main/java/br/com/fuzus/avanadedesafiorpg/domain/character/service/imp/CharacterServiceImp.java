@@ -11,19 +11,19 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCha
 import br.com.fuzus.avanadedesafiorpg.domain.character.repository.CharacterRepository;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CharacterServiceImp  implements CharacterService {
 
     private final CharacterRepository repository;
-
-    public CharacterServiceImp(CharacterRepository repository) {
-        this.repository = repository;
-    }
+    private final Environment environment;
 
     @Override
     public Character createWarrior(CreateCharacterDto dto) {
@@ -58,7 +58,7 @@ public class CharacterServiceImp  implements CharacterService {
     @Override
     public Character getById(String id) {
         var uuid = UUID.fromString(id);
-        return repository.findById(uuid).orElseThrow(() -> new EntityNotFoundException("Personagem não encontrado"));
+        return repository.findById(uuid).orElseThrow(() -> new EntityNotFoundException(environment.getProperty("character.notFound")));
     }
 
     @Override
@@ -83,9 +83,9 @@ public class CharacterServiceImp  implements CharacterService {
     public Character createRandomMonster(int i) {
         Character monster = null;
         switch (i) {
-            case 1 -> monster = new Orc("Orc inimigo");
-            case 2 -> monster = new Giant("Gigante inimigo");
-            case 3 -> monster = new Werewolf("Lobisomem inimigo");
+            case 1 -> monster = new Orc(environment.getProperty("character.orc.defaultName"));
+            case 2 -> monster = new Giant(environment.getProperty("character.giant.defaultName"));
+            case 3 -> monster = new Werewolf(environment.getProperty("character.werewolf.defaultName"));
         }
         return this.saveInDatabase(monster);
     }

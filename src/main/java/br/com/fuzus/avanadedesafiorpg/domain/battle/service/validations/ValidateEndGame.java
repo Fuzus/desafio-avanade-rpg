@@ -9,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 public class ValidateEndGame implements ValidationTurn{
 
     private final Battle battle;
+    private final String errorMessage;
 
     @Override
     public void validate() {
         if (battle.getStatus() == BattleStatus.VICTORY || battle.getStatus() == BattleStatus.DEFEATED) {
-            throw new UnableToMoveException("O jogo esta encerrado");
+            throw new UnableToMoveException(errorMessage);
         }
     }
 }

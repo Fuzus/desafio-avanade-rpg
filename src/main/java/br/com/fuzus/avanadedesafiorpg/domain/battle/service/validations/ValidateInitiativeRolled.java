@@ -8,11 +8,12 @@ import lombok.RequiredArgsConstructor;
 public class ValidateInitiativeRolled implements ValidationTurn{
 
     private final Battle battle;
+    private final String errorMessage;
 
     @Override
     public void validate() {
         if (battle.getPlayerInitiative() != null && battle.getMonsterInitiative() != null){
-            throw new UnableToMoveException("Iniciativa ja foi rolada");
+            throw new UnableToMoveException(errorMessage);
         }
     }
 }
