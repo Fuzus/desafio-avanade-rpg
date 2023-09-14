@@ -6,7 +6,8 @@ public enum Dice {
     D12(12),
     D8(8),
     D6(6),
-    D4(4);
+    D4(4),
+    D3(3);
 
     public final int faces;
 

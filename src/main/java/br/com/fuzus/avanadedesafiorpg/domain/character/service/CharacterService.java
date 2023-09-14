@@ -17,4 +17,5 @@ public interface CharacterService {
     Character update(String id, CreateCharacterDto dto);
     void delete(String id);
     List<Character> getAll();
+    Character createRandomMonster(int i);
 }

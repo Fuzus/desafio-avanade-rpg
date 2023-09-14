@@ -38,8 +38,7 @@ public class BattleServiceImp implements BattleService {
         if (dto.chosenMonster() != null) {
             monster = this.characterService.getById(dto.chosenMonster());
         } else {
-            //TODO: Criar o monstro de forma aleatória
-            monster = this.characterService.createOrc(new CreateCharacterDto("josnei"));
+            monster = this.characterService.createRandomMonster(DiceRoll.diceRoll(Dice.D3));
         }
         var battle = new Battle(hero, monster);
         battle = this.battleRepository.save(battle);

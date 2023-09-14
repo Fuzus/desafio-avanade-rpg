@@ -79,6 +79,17 @@ public class CharacterServiceImp  implements CharacterService {
         return this.repository.findAll();
     }
 
+    @Override
+    public Character createRandomMonster(int i) {
+        Character monster = null;
+        switch (i) {
+            case 1 -> monster = new Orc("Orc inimigo");
+            case 2 -> monster = new Giant("Gigante inimigo");
+            case 3 -> monster = new Werewolf("Lobisomem inimigo");
+        }
+        return this.saveInDatabase(monster);
+    }
+
     private Character saveInDatabase(Character character){
         return repository.save(character);
     }
