@@ -1,23 +1,23 @@
 package br.com.fuzus.avanadedesafiorpg.domain.battle.service;
 
+import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.BattleStatus;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.InteractInBattleDto;
+import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.StartBattleDto;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleInitiativeResultResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStartedResponse;
-import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.request.StartBattleDto;
-import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
-import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Subject;
-import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response.BattleStatusResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.repository.BattleRepository;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.CalculateDamage;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.DamageActions;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.actions.dice.DiceRoll;
 import br.com.fuzus.avanadedesafiorpg.domain.battle.service.validations.*;
-import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Dice;
+import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
+import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Subject;
+import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.service.TurnService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -97,7 +97,7 @@ public class BattleServiceImp implements BattleService {
         var damageReceived = this.attack(battle.getMonster(), battle.getHero());
         actualTurn.setDamageReceived(damageReceived);
 
-        if (battle.getHero().getLifePoints() <= 0){
+        if (battle.getHero().getLifePoints() <= 0) {
             battle.setStatus(BattleStatus.DEFEATED);
         }
 

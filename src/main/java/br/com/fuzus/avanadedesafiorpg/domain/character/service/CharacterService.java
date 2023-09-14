@@ -1,7 +1,7 @@
 package br.com.fuzus.avanadedesafiorpg.domain.character.service;
 
-import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
+import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 
 import java.util.List;
 

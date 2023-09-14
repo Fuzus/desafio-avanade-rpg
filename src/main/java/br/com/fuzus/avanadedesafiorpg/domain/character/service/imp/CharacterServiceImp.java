@@ -1,6 +1,5 @@
 package br.com.fuzus.avanadedesafiorpg.domain.character.service.imp;
 
-import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes.Barbarian;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes.Knight;
@@ -8,6 +7,7 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.entity.heroes.Warrior;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.monster.Giant;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.monster.Orc;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.monster.Werewolf;
+import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.repository.CharacterRepository;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.persistence.EntityNotFoundException;
