@@ -18,4 +18,5 @@ public interface CharacterService {
     void delete(String id);
     List<Character> getAll();
     Character createRandomMonster(int i);
+    List<Character> getClasses();
 }

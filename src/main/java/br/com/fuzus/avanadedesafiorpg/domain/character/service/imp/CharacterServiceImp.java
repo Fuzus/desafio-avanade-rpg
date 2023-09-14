@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,6 +89,18 @@ public class CharacterServiceImp  implements CharacterService {
             case 3 -> monster = new Werewolf(environment.getProperty("character.werewolf.defaultName"));
         }
         return this.saveInDatabase(monster);
+    }
+
+    @Override
+    public List<Character> getClasses() {
+        return Arrays.asList(
+                new Warrior(null),
+                new Barbarian(null),
+                new Knight(null),
+                new Orc(null),
+                new Giant(null),
+                new Werewolf(null)
+        );
     }
 
     private Character saveInDatabase(Character character){

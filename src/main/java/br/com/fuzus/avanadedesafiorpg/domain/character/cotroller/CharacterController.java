@@ -3,6 +3,7 @@ package br.com.fuzus.avanadedesafiorpg.domain.character.cotroller;
 import br.com.fuzus.avanadedesafiorpg.domain.character.payload.request.CreateCharacterDto;
 import br.com.fuzus.avanadedesafiorpg.domain.character.payload.response.CharacterDtoResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
+import br.com.fuzus.avanadedesafiorpg.domain.character.payload.response.ClassDataResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -86,6 +87,12 @@ public class CharacterController {
     public ResponseEntity<Void> deleteCharacter(@PathVariable String id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("classes")
+    public ResponseEntity<List<ClassDataResponse>> getClasses(){
+        var classes = this.service.getClasses();
+        return ResponseEntity.ok(classes.stream().map(ClassDataResponse::new).toList());
     }
 
     private ResponseEntity<CharacterDtoResponse> createCharacterResponse(Character character, UriComponentsBuilder uriBuilder) {
