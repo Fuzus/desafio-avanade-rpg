@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class BattleServiceImp implements BattleService {
 
     private final BattleRepository battleRepository;
+    private final BattleHistoryService battleHistoryService;
     private final CharacterService characterService;
     private final TurnService turnService;
 
@@ -47,7 +48,7 @@ public class BattleServiceImp implements BattleService {
 
     @Override
     public BattleInitiativeResultResponse diceInitiative(InteractInBattleDto dto) {
-        var battle = this.getBattleById(dto.id());
+        var battle = this.battleHistoryService.getBattleById(dto.id());
         this.doTurnValidations(new ValidateInitiativeRolled(battle));
         String nextAttacker;
         do {
@@ -69,7 +70,7 @@ public class BattleServiceImp implements BattleService {
 
     @Override
     public BattleStatusResponse attack(InteractInBattleDto dto) {
-        var battle = this.getBattleById(dto.id());
+        var battle = this.battleHistoryService.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
 
         this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanAttack(actualTurn));
@@ -89,7 +90,7 @@ public class BattleServiceImp implements BattleService {
 
     @Override
     public BattleStatusResponse defend(InteractInBattleDto dto) {
-        var battle = this.getBattleById(dto.id());
+        var battle = this.battleHistoryService.getBattleById(dto.id());
         var actualTurn = this.turnService.getActualTurn(battle);
 
         this.doTurnValidations(new ValidateEndGame(battle), new ValidatePlayerCanDefend(actualTurn));
@@ -105,10 +106,6 @@ public class BattleServiceImp implements BattleService {
         battle = this.battleRepository.save(battle);
 
         return new BattleStatusResponse(actualTurn, battle.getHero(), battle.getMonster(), "Sua vez de atacar");
-    }
-
-    private Battle getBattleById(Long id) {
-        return this.battleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Batalha não encontrada"));
     }
 
     private void doTurnValidations(ValidationTurn... validation) {

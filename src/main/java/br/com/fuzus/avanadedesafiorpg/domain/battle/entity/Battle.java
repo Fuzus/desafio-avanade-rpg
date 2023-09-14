@@ -2,6 +2,7 @@ package br.com.fuzus.avanadedesafiorpg.domain.battle.entity;
 
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class Battle {
     private Integer playerInitiative;
     private Integer monsterInitiative;
     @OneToMany(mappedBy = "battle", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Turn> turns;
     @Enumerated(EnumType.STRING)
     private BattleStatus status;
