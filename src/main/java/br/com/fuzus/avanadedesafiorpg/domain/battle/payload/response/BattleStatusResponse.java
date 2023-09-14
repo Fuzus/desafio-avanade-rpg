@@ -1,6 +1,5 @@
 package br.com.fuzus.avanadedesafiorpg.domain.battle.payload.response;
 
-import br.com.fuzus.avanadedesafiorpg.domain.battle.entity.Battle;
 import br.com.fuzus.avanadedesafiorpg.domain.character.entity.Character;
 import br.com.fuzus.avanadedesafiorpg.domain.character.payload.response.CharacterDtoResponse;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;

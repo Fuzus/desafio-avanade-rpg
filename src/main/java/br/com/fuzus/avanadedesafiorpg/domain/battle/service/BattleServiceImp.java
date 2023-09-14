@@ -19,7 +19,6 @@ import br.com.fuzus.avanadedesafiorpg.domain.character.service.CharacterService;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Subject;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.entity.Turn;
 import br.com.fuzus.avanadedesafiorpg.domain.turn.service.TurnService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
