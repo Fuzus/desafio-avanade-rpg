@@ -52,17 +52,17 @@ public class BattleServiceImp implements BattleService {
     public BattleInitiativeResultResponse diceInitiative(InteractInBattleDto dto) {
         var battle = this.battleHistoryService.getBattleById(dto.id());
         this.doTurnValidations(new ValidateInitiativeRolled(battle, environment.getProperty("battle.initiative.error")));
-        String nextAttacker;
+        Subject nextAttacker;
         do {
             var playerInitiative = DiceRoll.diceRoll(Dice.D20);
             var monsterInitiative = DiceRoll.diceRoll(Dice.D20);
 
             battle.setPlayerInitiative(playerInitiative);
             battle.setMonsterInitiative(monsterInitiative);
-            nextAttacker = playerInitiative > monsterInitiative ? "HERO" : "MONSTER";
+            nextAttacker = playerInitiative > monsterInitiative ? Subject.HERO : Subject.MONSTER;
 
         } while (battle.getPlayerInitiative().equals(battle.getMonsterInitiative()));
-        var turn = new Turn(null, 1L, null, null, battle, Subject.valueOf(nextAttacker));
+        var turn = new Turn(null, 1L, null, null, battle, nextAttacker);
         battle.getTurns().add(turn);
         battle.setStatus(BattleStatus.ON_GOING);
         this.turnService.createTurn(turn, battle);
